@@ -1,0 +1,295 @@
+/* ---------- GLOBAL ---------- */
+body {
+    margin: 0;
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: #0f172a;
+    color: #e5e7eb;
+}
+
+h1 {
+    text-align: center;
+    margin: 20px 0;
+    color: #38bdf8;
+}
+
+/* ---------- CARD ---------- */
+.card {
+    background: #020617;
+    padding: 20px;
+    margin: 20px auto;
+    width: 90%;
+    max-width: 900px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(56,189,248,0.2);
+}
+
+/* ---------- INPUTS ---------- */
+input {
+    width: 23%;
+    padding: 10px;
+    margin: 8px 4px;
+    border-radius: 6px;
+    border: none;
+    outline: none;
+    background: #020617;
+    color: #e5e7eb;
+    border: 1px solid #334155;
+}
+
+input::placeholder {
+    color: #94a3b8;
+}
+
+/* ---------- BUTTONS ---------- */
+button {
+    padding: 10px 16px;
+    margin: 8px 4px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    background: #38bdf8;
+    color: #020617;
+}
+
+button:hover {
+    background: #0ea5e9;
+}
+
+button.delete {
+    background: #ef4444;
+    color: white;
+}
+
+button.delete:hover {
+    background: #dc2626;
+}
+
+button.secondary {
+    background: #334155;
+    color: #e5e7eb;
+}
+
+/* ---------- TABLE ---------- */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+thead {
+    background: #020617;
+}
+
+th, td {
+    padding: 10px;
+    text-align: center;
+    border-bottom: 1px solid #334155;
+}
+
+th {
+    color: #38bdf8;
+}
+
+tr:hover {
+    background: #020617;
+}
+
+/* ---------- SEARCH ---------- */
+.search-box {
+    text-align: right;
+    margin-bottom: 10px;
+}
+
+.search-box input {
+    width: 200px;
+}
+
+/* ===============================
+   TABLE ROW HOVER EFFECT
+================================ */
+
+table tbody tr {
+    transition: background-color 0.25s ease,
+                transform 0.2s ease,
+                box-shadow 0.2s ease;
+}
+
+table tbody tr:hover {
+    background-color: rgba(0, 200, 255, 0.08);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0, 200, 255, 0.15);
+}
+
+/* ===============================
+   BUTTON HOVER EFFECT
+================================ */
+
+button {
+    transition: background-color 0.25s ease,
+                transform 0.15s ease,
+                box-shadow 0.15s ease;
+}
+
+button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(0, 200, 255, 0.4);
+}
+
+button:active {
+    transform: scale(0.97);
+}
+
+/* ===============================
+   TOAST NOTIFICATION
+================================ */
+
+.toast {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    min-width: 250px;
+    padding: 14px 20px;
+    border-radius: 8px;
+    font-weight: 500;
+    color: #fff;
+    background: #333;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(20px);
+    transition: all 0.4s ease;
+    z-index: 9999;
+}
+
+.toast.show {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+}
+
+.toast.success {
+    background: linear-gradient(135deg, #00c6ff, #0072ff);
+}
+
+.toast.error {
+    background: linear-gradient(135deg, #ff4b2b, #ff416c);
+}
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    margin-top: 20px;
+}
+
+.pagination button {
+    padding: 8px 16px;
+    border-radius: 6px;
+    background: #1e90ff;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+.pagination button:disabled {
+    background: #555;
+    cursor: not-allowed;
+}
+
+#pageInfo {
+    color: #aaa;
+    font-weight: 500;
+}
+
+/* ================= TABLE HOVER EFFECT ================= */
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+th, td {
+    padding: 12px;
+    text-align: left;
+}
+
+tbody tr {
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+/* Hover effect */
+tbody tr:hover {
+    background-color: #1e1e1e;
+    transform: scale(1.01);
+    cursor: pointer;
+}
+
+/* Header style */
+th {
+    background-color: #121212;
+    color: #ffffff;
+}
+
+/* Buttons smooth effect */
+button {
+    padding: 6px 12px;
+    border-radius: 6px;
+    border: none;
+    transition: all 0.3s ease;
+}
+
+button:hover {
+    opacity: 0.85;
+    transform: scale(1.05);
+}
+
+/* ================= RESPONSIVE DESIGN ================= */
+
+@media (max-width: 768px) {
+
+    body {
+        padding: 10px;
+    }
+
+    h1 {
+        font-size: 22px;
+        text-align: center;
+    }
+
+    /* Cards stack nicely */
+    .card {
+        padding: 15px;
+        margin-bottom: 15px;
+    }
+
+    /* Inputs full width */
+    input, button {
+        width: 100%;
+        margin-top: 8px;
+    }
+
+    /* Search bar layout */
+    .search-bar {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    /* Table scroll instead of breaking */
+    .table-wrapper {
+        overflow-x: auto;
+    }
+
+    table {
+        min-width: 600px;
+    }
+
+    th, td {
+        font-size: 14px;
+        padding: 8px;
+    }
+
+    button {
+        font-size: 14px;
+    }
+}
