@@ -33,4 +33,4 @@ Frontend UI for the Student Management System.
 
 Open `index.html` using **Live Server**.
 
-Recommended URL: http://127.0.0.1:5500/frontend/index.html
+url:http://127.0.0.1:5500/student-management/frontend/index.html
