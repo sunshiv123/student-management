@@ -6,9 +6,9 @@ Frontend UI for the Student Management System.
 
 ## 📸 Preview
 
-https://raw.githubusercontent.com/sunshiv123/student-management/main/frontend/screenshots/dashboard.png
-https://raw.githubusercontent.com/sunshiv123/student-management/main/frontend/screenshots/add-edit.png
-https://raw.githubusercontent.com/sunshiv123/student-management/main/frontend/screenshots/api.png
+![Dashboard](https://raw.githubusercontent.com/sunshiv123/student-management/main/frontend/screenshots/dashboard.png)
+![Add/Edit](https://raw.githubusercontent.com/sunshiv123/student-management/main/frontend/screenshots/add-edit.png)
+![Api](https://raw.githubusercontent.com/sunshiv123/student-management/main/frontend/screenshots/api.png)
 
 ---
 
