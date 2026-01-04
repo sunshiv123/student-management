@@ -1,14 +1,15 @@
-const API_URL = "https://student-management-jywp.onrender.com";
+/* ================= CONFIG ================= */
+const API_BASE_URL = "https://student-management-jywp.onrender.com/students";
 let currentPage = 0;
 let totalPages = 1;
 const PAGE_SIZE = 5;
 
-/* ---------------- AUTO LOAD ---------------- */
+/* ================= AUTO LOAD ================= */
 document.addEventListener("DOMContentLoaded", () => {
-    setTimeout(loadStudents, 1000); // wait 1 sec for backend
+    loadStudents();
 });
 
-/* ---------------- ADD or UPDATE ---------------- */
+/* ================= ADD / UPDATE ================= */
 async function addStudent() {
     const id = document.getElementById("studentId").value;
 
@@ -21,7 +22,7 @@ async function addStudent() {
 
     try {
         const response = await fetch(
-            id ? `${API_URL}/${id}` : API_URL,
+            id ? `${API_BASE_URL}/${id}` : API_BASE_URL,
             {
                 method: id ? "PUT" : "POST",
                 headers: { "Content-Type": "application/json" },
@@ -31,53 +32,48 @@ async function addStudent() {
 
         if (!response.ok) throw new Error();
 
-        showToast(
-            id ? "Student updated successfully" : "Student added successfully",
-            "success"
-        );
-
+        showToast(id ? "Student updated successfully" : "Student added successfully");
         clearForm();
         loadStudents();
 
     } catch (err) {
         console.error(err);
-        showToast("Something went wrong while saving student", "error");
+        showToast("Failed to save student", "error");
     }
 }
 
-/* ---------------- LOAD ALL ---------------- */
-currentPage = 0;
+/* ================= LOAD STUDENTS ================= */
 async function loadStudents() {
     try {
-        const res = await fetch(
-            `${API_URL}?page=${currentPage}&size=${PAGE_SIZE}`
+        const response = await fetch(
+            `${API_BASE_URL}?page=${currentPage}&size=${PAGE_SIZE}`
         );
-        const json = await res.json();
 
-        const students = json.data.content;
-        totalPages = json.data.totalPages;
+        if (!response.ok) throw new Error();
 
-        const table = document.getElementById("studentTableBody");
-        table.innerHTML = "";
+        const data = await response.json();
+        const students = data.content || [];
 
-        students.forEach(s => {
-            const row = document.createElement("tr");
-            row.innerHTML = `
-                <td>${s.id}</td>
-                <td>${s.name}</td>
-                <td>${s.email}</td>
-                <td>${s.course}</td>
-                <td>${s.phone}</td>
-                <td>
-                    <button onclick="editStudent(${s.id})">Edit</button>
-                    <button onclick="deleteStudent(${s.id})" style="color:red;margin-left:5px">
-                        Delete
-                    </button>
-                </td>
+        const tableBody = document.getElementById("studentTableBody");
+        tableBody.innerHTML = "";
+
+        students.forEach(student => {
+            tableBody.innerHTML += `
+                <tr>
+                    <td>${student.id}</td>
+                    <td>${student.name}</td>
+                    <td>${student.email}</td>
+                    <td>${student.course}</td>
+                    <td>${student.phone}</td>
+                    <td>
+                        <button onclick="editStudent(${student.id})">Edit</button>
+                        <button onclick="deleteStudent(${student.id})">Delete</button>
+                    </td>
+                </tr>
             `;
-            table.appendChild(row);
         });
 
+        totalPages = data.totalPages || 1;
         updatePaginationUI();
 
     } catch (err) {
@@ -86,34 +82,33 @@ async function loadStudents() {
     }
 }
 
-/* ---------------- EDIT ---------------- */
+/* ================= EDIT ================= */
 async function editStudent(id) {
     try {
-        const res = await fetch(`${API_URL}/${id}`);
-        const json = await res.json();
-        const s = json.data;
+        const res = await fetch(`${API_BASE_URL}/${id}`);
+        const student = await res.json();
 
-        document.getElementById("studentId").value = s.id;
-        document.getElementById("name").value = s.name;
-        document.getElementById("email").value = s.email;
-        document.getElementById("course").value = s.course;
-        document.getElementById("phone").value = s.phone;
+        document.getElementById("studentId").value = student.id;
+        document.getElementById("name").value = student.name;
+        document.getElementById("email").value = student.email;
+        document.getElementById("course").value = student.course;
+        document.getElementById("phone").value = student.phone;
 
-        showToast("Edit mode enabled", "success");
+        showToast("Edit mode enabled");
 
     } catch (err) {
         console.error(err);
-        showToast("Failed to fetch student details", "error");
+        showToast("Failed to load student", "error");
     }
 }
 
-/* ---------------- DELETE ---------------- */
+/* ================= DELETE ================= */
 async function deleteStudent(id) {
-    if (!confirm("Are you sure you want to delete this student?")) return;
+    if (!confirm("Delete this student?")) return;
 
     try {
-        await fetch(`${API_URL}/${id}`, { method: "DELETE" });
-        showToast("Student deleted successfully", "success");
+        await fetch(`${API_BASE_URL}/${id}`, { method: "DELETE" });
+        showToast("Student deleted");
         loadStudents();
     } catch (err) {
         console.error(err);
@@ -121,76 +116,43 @@ async function deleteStudent(id) {
     }
 }
 
-/* ---------------- SEARCH ---------------- */
+/* ================= SEARCH ================= */
 async function searchStudents() {
     const name = document.getElementById("searchInput").value.trim();
-
-    if (name === "") {
-        showToast("Please enter a name to search", "error");
-        return;
-    }
+    if (!name) return showToast("Enter name to search", "error");
 
     try {
-        const response = await fetch(`${API_URL}/search?name=${name}`);
-        const result = await response.json();
+        const res = await fetch(`${API_BASE_URL}/search?name=${name}`);
+        const data = await res.json();
 
         const tableBody = document.getElementById("studentTableBody");
         tableBody.innerHTML = "";
 
-        result.data.forEach(student => {
-            const row = document.createElement("tr");
-            row.innerHTML = `
-                <td>${student.id}</td>
-                <td>${student.name}</td>
-                <td>${student.email}</td>
-                <td>${student.course}</td>
-                <td>${student.phone}</td>
-                <td>
-                    <button onclick="editStudent(${student.id})">Edit</button>
-                    <button onclick="deleteStudent(${student.id})" style="color:red;margin-left:5px">
-                        Delete
-                    </button>
-                </td>
+        data.forEach(s => {
+            tableBody.innerHTML += `
+                <tr>
+                    <td>${s.id}</td>
+                    <td>${s.name}</td>
+                    <td>${s.email}</td>
+                    <td>${s.course}</td>
+                    <td>${s.phone}</td>
+                    <td>
+                        <button onclick="editStudent(${s.id})">Edit</button>
+                        <button onclick="deleteStudent(${s.id})">Delete</button>
+                    </td>
+                </tr>
             `;
-            tableBody.appendChild(row);
         });
 
-        showToast("Search completed", "success");
+        showToast("Search completed");
 
-    } catch (error) {
-        console.error(error);
+    } catch (err) {
+        console.error(err);
         showToast("Search failed", "error");
     }
 }
 
-/* ---------------- RESET SEARCH ---------------- */
-function resetSearch() {
-    document.getElementById("searchInput").value = "";
-    loadStudents();
-    showToast("Search reset", "success");
-}
-
-/* ---------------- CLEAR FORM ---------------- */
-function clearForm() {
-    document.getElementById("studentId").value = "";
-    document.getElementById("name").value = "";
-    document.getElementById("email").value = "";
-    document.getElementById("course").value = "";
-    document.getElementById("phone").value = "";
-}
-
-/* ---------------- TOAST ---------------- */
-function showToast(message, type = "success") {
-    const toast = document.getElementById("toast");
-
-    toast.textContent = message;
-    toast.className = `toast show ${type}`;
-
-    setTimeout(() => {
-        toast.className = "toast";
-    }, 3000);
-}
-
+/* ================= PAGINATION ================= */
 function nextPage() {
     if (currentPage < totalPages - 1) {
         currentPage++;
@@ -208,10 +170,18 @@ function prevPage() {
 function updatePaginationUI() {
     document.getElementById("pageInfo").innerText =
         `Page ${currentPage + 1} of ${totalPages}`;
+}
 
-    document.querySelector(".pagination button:first-child").disabled =
-        currentPage === 0;
+/* ================= UTIL ================= */
+function clearForm() {
+    ["studentId", "name", "email", "course", "phone"].forEach(
+        id => document.getElementById(id).value = ""
+    );
+}
 
-    document.querySelector(".pagination button:last-child").disabled =
-        currentPage === totalPages - 1;
+function showToast(msg, type = "success") {
+    const toast = document.getElementById("toast");
+    toast.textContent = msg;
+    toast.className = `toast show ${type}`;
+    setTimeout(() => toast.className = "toast", 3000);
 }
