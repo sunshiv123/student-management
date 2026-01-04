@@ -42,13 +42,7 @@
             <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
 
-        <!-- PostgreSQL (Production DB) -->
-        <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-
+        
         <!-- MySQL (LOCAL) -->
 <dependency>
     <groupId>mysql</groupId>
