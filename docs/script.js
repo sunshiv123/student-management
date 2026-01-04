@@ -1,4 +1,4 @@
-const API_URL = "https://student-management-xyz.onrender.com/students";
+const API_URL = "https://student-management-jywp.onrender.com";
 let currentPage = 0;
 let totalPages = 1;
 const PAGE_SIZE = 5;
