@@ -5,6 +5,7 @@ import java.util.List;
 import jakarta.validation.Valid;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -52,16 +53,13 @@ public class StudentController {
             responseCode = "200", description = "Students fetched successfully")
     })
     @GetMapping
-    public ResponseEntity<ApiResponse<Page<Student>>> getAllStudents(Pageable pageable) {
+public Page<Student> getStudents(
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "5") int size
+) {
+    return studentRepository.findAll(PageRequest.of(page, size));
+}
 
-        return ResponseEntity.ok(
-                new ApiResponse<>(
-                        true,
-                        "Students fetched successfully",
-                        studentService.getStudents(pageable)
-                )
-        );
-    }
 
     // ================= READ BY ID (🔥 REQUIRED FOR EDIT) =================
     @Operation(summary = "Get student by ID")
