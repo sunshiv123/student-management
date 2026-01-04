@@ -16,12 +16,11 @@ public class StudentController {
 
     private final StudentRepository studentRepository;
 
-    // ✅ Constructor injection
     public StudentController(StudentRepository studentRepository) {
         this.studentRepository = studentRepository;
     }
 
-    // ✅ PAGINATED GET (PostgreSQL SAFE)
+    // ✅ PAGINATION
     @GetMapping
     public Page<Student> getStudents(
             @RequestParam(defaultValue = "0") int page,
@@ -30,19 +29,36 @@ public class StudentController {
         return studentRepository.findAll(PageRequest.of(page, size));
     }
 
-    // ✅ ADD STUDENT
+    // ✅ GET BY ID (EDIT)
+    @GetMapping("/{id}")
+    public Student getStudent(@PathVariable Long id) {
+        return studentRepository.findById(id).orElseThrow();
+    }
+
+    // ✅ ADD
     @PostMapping
     public Student addStudent(@RequestBody Student student) {
         return studentRepository.save(student);
     }
 
-    // ✅ DELETE STUDENT
+    // ✅ UPDATE
+    @PutMapping("/{id}")
+    public Student updateStudent(@PathVariable Long id, @RequestBody Student s) {
+        Student existing = studentRepository.findById(id).orElseThrow();
+        existing.setName(s.getName());
+        existing.setEmail(s.getEmail());
+        existing.setCourse(s.getCourse());
+        existing.setPhone(s.getPhone());
+        return studentRepository.save(existing);
+    }
+
+    // ✅ DELETE
     @DeleteMapping("/{id}")
     public void deleteStudent(@PathVariable Long id) {
         studentRepository.deleteById(id);
     }
 
-    // ✅ SEARCH BY NAME
+    // ✅ SEARCH
     @GetMapping("/search")
     public List<Student> searchStudents(@RequestParam String name) {
         return studentRepository.findByNameContainingIgnoreCase(name);
