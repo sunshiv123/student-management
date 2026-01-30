@@ -1,72 +1,50 @@
 package com.student.studentmanagement.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Entity
-@Table(name = "students")
+@Table(name = "student")
 public class Student {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "Name is required")
+    @Column(nullable = false)
     private String name;
 
-    @Email(message = "Invalid email format")
-    @NotBlank(message = "Email is required")
+    @Column(nullable = false)
     private String email;
 
-    @NotBlank(message = "Course is required")
+    @Column(nullable = false)
     private String course;
 
-    @Size(min = 10, max = 10, message = "Phone must be 10 digits")
+    @Column(nullable = false)
     private String phone;
 
+    // ✅ Constructors
     public Student() {}
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
+    public Student(String name, String email, String course, String phone) {
         this.name = name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getCourse() {
-        return course;
-    }
-
-    public void setCourse(String course) {
         this.course = course;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
         this.phone = phone;
     }
+
+    // ✅ Getters & Setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
+
+    public String getCourse() { return course; }
+    public void setCourse(String course) { this.course = course; }
+
+    public String getPhone() { return phone; }
+    public void setPhone(String phone) { this.phone = phone; }
 }

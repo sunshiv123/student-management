@@ -9,58 +9,53 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@CrossOrigin(origins = "*")
+@CrossOrigin(
+    origins = {
+        "http://127.0.0.1:5500",
+        "http://localhost:5500"
+    }
+)
 @RestController
 @RequestMapping("/students")
 public class StudentController {
 
-    private final StudentRepository studentRepository;
+    private final StudentRepository repo;
 
-    public StudentController(StudentRepository studentRepository) {
-        this.studentRepository = studentRepository;
+    public StudentController(StudentRepository repo) {
+        this.repo = repo;
     }
 
-    // ✅ PAGINATION
     @GetMapping
-    public Page<Student> getStudents(
+    public Page<Student> getAll(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size
     ) {
-        return studentRepository.findAll(PageRequest.of(page, size));
+        return repo.findAll(PageRequest.of(page, size));
     }
 
-    // ✅ GET BY ID (EDIT)
-    @GetMapping("/{id}")
-    public Student getStudent(@PathVariable Long id) {
-        return studentRepository.findById(id).orElseThrow();
-    }
-
-    // ✅ ADD
     @PostMapping
-    public Student addStudent(@RequestBody Student student) {
-        return studentRepository.save(student);
+    public Student add(@RequestBody Student s) {
+        return repo.save(s);
     }
 
-    // ✅ UPDATE
     @PutMapping("/{id}")
-    public Student updateStudent(@PathVariable Long id, @RequestBody Student s) {
-        Student existing = studentRepository.findById(id).orElseThrow();
-        existing.setName(s.getName());
-        existing.setEmail(s.getEmail());
-        existing.setCourse(s.getCourse());
-        existing.setPhone(s.getPhone());
-        return studentRepository.save(existing);
+    public Student update(@PathVariable Long id, @RequestBody Student s) {
+        s.setId(id);
+        return repo.save(s);
     }
 
-    // ✅ DELETE
     @DeleteMapping("/{id}")
-    public void deleteStudent(@PathVariable Long id) {
-        studentRepository.deleteById(id);
+    public void delete(@PathVariable Long id) {
+        repo.deleteById(id);
     }
 
-    // ✅ SEARCH
     @GetMapping("/search")
-    public List<Student> searchStudents(@RequestParam String name) {
-        return studentRepository.findByNameContainingIgnoreCase(name);
+    public List<Student> search(@RequestParam String name) {
+        return repo.findByNameContainingIgnoreCase(name);
+    }
+
+    @GetMapping("/{id}")
+    public Student getOne(@PathVariable Long id) {
+        return repo.findById(id).orElseThrow();
     }
 }
